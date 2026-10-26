@@ -1,0 +1,80 @@
+{
+ "dev": {
+  "naive patterns": {
+   "secrets_leaked": "38/372",
+   "leak_pct": 10.2,
+   "lookalikes_wrongly_removed": "120/408",
+   "leaks_by_type": {
+    "pw_field": "38/38"
+   }
+  },
+  "entropy only": {
+   "secrets_leaked": "181/372",
+   "leak_pct": 48.7,
+   "lookalikes_wrongly_removed": "138/408",
+   "leaks_by_type": {
+    "aws": "1/34",
+    "card": "36/36",
+    "conn": "35/35",
+    "iban": "11/39",
+    "pw_field": "38/38",
+    "pw_text": "31/31",
+    "ssn": "29/29"
+   }
+  },
+  "layered (format + checksum + field context)": {
+   "secrets_leaked": "0/372",
+   "leak_pct": 0.0,
+   "lookalikes_wrongly_removed": "1/408",
+   "leaks_by_type": {}
+  }
+ },
+ "held_out": {
+  "naive patterns": {
+   "secrets_leaked": "297/575",
+   "leak_pct": 51.7,
+   "lookalikes_wrongly_removed": "157/570",
+   "leaks_by_type": {
+    "aadhaar": "34/34",
+    "card_wrapped": "38/38",
+    "iban_wrapped": "37/37",
+    "otp": "29/29",
+    "pw_field": "36/36",
+    "pw_prose": "40/40",
+    "slack": "44/44",
+    "stripe": "39/39"
+   }
+  },
+  "entropy only": {
+   "secrets_leaked": "315/575",
+   "leak_pct": 54.8,
+   "lookalikes_wrongly_removed": "234/570",
+   "leaks_by_type": {
+    "aadhaar": "34/34",
+    "aws": "5/41",
+    "card": "43/43",
+    "card_wrapped": "38/38",
+    "iban": "14/44",
+    "iban_wrapped": "37/37",
+    "otp": "29/29",
+    "pw_field": "36/36",
+    "pw_prose": "40/40",
+    "ssn": "39/39"
+   }
+  },
+  "layered (format + checksum + field context)": {
+   "secrets_leaked": "261/575",
+   "leak_pct": 45.4,
+   "lookalikes_wrongly_removed": "2/570",
+   "leaks_by_type": {
+    "aadhaar": "34/34",
+    "card_wrapped": "38/38",
+    "iban_wrapped": "37/37",
+    "otp": "29/29",
+    "pw_prose": "40/40",
+    "slack": "44/44",
+    "stripe": "39/39"
+   }
+  }
+ }
+}

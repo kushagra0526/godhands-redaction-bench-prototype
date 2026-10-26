@@ -3,7 +3,7 @@ import math
 import re
 from collections import Counter
 
-from .gen import luhn_ok
+from .gen import luhn_ok, verhoeff_ok
 
 MARK = "[REDACTED]"
 NAIVE = [
@@ -43,10 +43,19 @@ def ssn_ok(s):
     return a not in ("000", "666") and not a.startswith("9") and g != "00" and n != "0000"
 
 
+UNWRAP = re.compile(r"\b([0-9A-Z]{2,4})[ \t]*\n[ \t]*(?=[0-9A-Z]{2,4}\b)")   # a digit/IBAN group cut by a line break: join it (output keeps a space)
+EXTRA = [re.compile(r"\bxox[abprs]-[\w-]{10,}"), re.compile(r"\b[sr]k_(?:live|test)_[A-Za-z0-9]{16,}"),
+         re.compile(r"(?i)\b(?:password|passcode|pass|pwd)\s*(?:is|:|=)\s+(?!is\b)[^\s,;]+")]
+
+
 def layered(ev):
-    if ev.get("field") == "password":
+    if ev.get("field") in ("password", "otp"):
         return MARK
-    t = ev["text"]
+    t = UNWRAP.sub(r"\1 ", ev["text"])
+    for p in EXTRA:
+        t = p.sub(MARK, t)
+    t = re.sub(r"\b[2-9]\d{3}[ -]?\d{4}[ -]?\d{4}\b", lambda m: MARK if verhoeff_ok(re.sub(r"\D", "", m[0])) else m[0], t)
+    t = re.sub(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){3,7}(?: ?[A-Z0-9]{1,4})?\b", lambda m: MARK if mod97_ok(m[0].replace(" ", "")) else m[0], t)
     for p in NAIVE[:7]:                                           # PEM, JWT, AWS, GitHub, connection string, bearer, "password:" are fixed formats
         t = p.sub(MARK, t)
     t = re.sub(r"\b(?:\d[ -]?){13,19}\b", lambda m: MARK if luhn_ok(re.sub(r"\D", "", m[0])) else m[0], t)
